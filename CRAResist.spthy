@@ -1,0 +1,303 @@
+theory PhD2
+begin
+
+builtins: diffie-hellman, bilinear-pairing
+functions: gmul/2, bpmul/2
+
+rule gmul_1:
+[In(gmul('g'^a,'g'^b)),In('g'^a)]--[!KU('g'^b),!KD('g'^b)]->[K('g'^b)]
+
+rule gmul_2:
+[In(gmul('g'^a,'g'^b)),In('g'^b)]--[!KU('g'^a),!KD('g'^a)]->[K('g'^a)]
+rule gmul_3:
+[In(gmul('g'^c,gmul('g'^a,'g'^b))),In('g'^c),In('g'^a)]--[!KD('g'^b),!KU('g'^b)]->[K('g'^b)]
+rule gmul_5:
+[In(gmul('g'^c,gmul('g'^a,'g'^b))),In('g'^b),In('g'^a)]--[!KD('g'^c),!KU('g'^c)]->[K('g'^c)]
+rule gmul_6:
+[In(gmul('g'^c,gmul('g'^a,'g'^b))),In('g'^b),In('g'^c)]--[!KU('g'^a),!KD('g'^a)]->[K('g'^a)]
+
+/*
+rule bpmul1:
+[In(bpmul(x,y)),In(x)]--[!KU(y),!KD(y)]->[K(y)]
+rule bpmul2:
+[In(bpmul(x,y)),In(y)]--[!KU(x),!KD(x)]->[K(x)]
+rule bpmul3:
+[In(bpmul(x,y))]--[!KU(bpmul(y,x)),!KD(bpmul(y,x))]->[K(bpmul(y,x))]
+rule bpmul6:
+[In(bpmul(x,bpmul(y,z)))]--[!KU(bpmul(bpmul(x,y),z)),!KD(bpmul(bpmul(x,y),z))]->[K(bpmul(bpmul(x,y),z))]
+*/
+
+rule bpgmul_1_1:
+[In(bpmul(pmult(a,'g'),pmult(b,'g'))),In(pmult(a,'g'))]--[!KD(pmult(b,'g')),!KU(pmult(b,'g'))]->[K(pmult(b,'g'))]
+rule bpgmul_2_1:
+[In(bpmul(pmult(a,'g'),pmult(b,'g'))),In(pmult(b,'g'))]--[!KD(pmult(a,'g')),!KU(pmult(a,'g'))]->[K(pmult(a,'g'))]
+rule bpgmul_1_2:
+[In(bpmul(pmult(a,'h'),pmult(b,'h'))),In(pmult(a,'h'))]--[!KD(pmult(b,'h')),!KU(pmult(b,'h'))]->[K(pmult(b,'h'))]
+
+rule bpgmul_2_2:
+[In(bpmul(pmult(a,'h'),pmult(b,'h'))),In(pmult(b,'h'))]--[!KD(pmult(a,'h')),!KU(pmult(a,'h'))]->[K(pmult(a,'h'))]
+
+rule bpgmul_3_1:
+[!PM3(i,bpmul(pmult(a,'g'),bpmul(pmult(b,'g'),pmult(c,'g')))),In(pmult(a,'g'))]--[!KD(bpmul(pmult(b,'g'),pmult(c,'g'))),!KU(bpmul(pmult(b,'g'),pmult(c,'g')))]->[K(bpmul(pmult(b,'g'),pmult(c,'g')))]
+rule bpgmul_4_1:
+[!PM3(i,bpmul(pmult(a,'g'),bpmul(pmult(b,'g'),pmult(c,'g')))),In(pmult(b,'g'))]--[!KD(bpmul(pmult(a,'g'),pmult(c,'g'))),!KU(bpmul(pmult(a,'g'),pmult(c,'g')))]->[K(bpmul(pmult(a,'g'),pmult(c,'g')))]
+rule bpgmul_5_1:
+[!PM3(i,bpmul(pmult(a,'g'),bpmul(pmult(b,'g'),pmult(c,'g')))),In(pmult(c,'g'))]--[!KD(bpmul(pmult(a,'g'),pmult(b,'g'))),!KU(bpmul(pmult(a,'g'),pmult(b,'g')))]->[K(bpmul(pmult(a,'g'),pmult(b,'g')))]
+
+rule bpgmul_3_2:
+[!PM3(i,bpmul(pmult(a,'h'),bpmul(pmult(b,'h'),pmult(c,'h')))),In(pmult(a,'h'))]--[!KD(bpmul(pmult(b,'h'),pmult(c,'h'))),!KU(bpmul(pmult(b,'h'),pmult(c,'h')))]->[K(bpmul(pmult(b,'h'),pmult(c,'h')))]
+rule bpgmul_4_2:
+[!PM3(i,bpmul(pmult(a,'h'),bpmul(pmult(b,'h'),pmult(c,'h')))),In(pmult(b,'h'))]--[!KD(bpmul(pmult(a,'h'),pmult(c,'h'))),!KU(bpmul(pmult(a,'h'),pmult(c,'h')))]->[K(bpmul(pmult(a,'h'),pmult(c,'h')))]
+rule bpgmul_5_2:
+[!PM3(i,bpmul(pmult(a,'h'),bpmul(pmult(b,'h'),pmult(c,'h')))),In(pmult(c,'h'))]--[!KD(bpmul(pmult(a,'h'),pmult(b,'h'))),!KU(bpmul(pmult(a,'h'),pmult(b,'h')))]->[K(bpmul(pmult(a,'h'),pmult(b,'h')))]
+
+/*
+rule bpgmul_3_1:
+[In(i,bpmul(pmult(a,'g'),bpmul(pmult(b,'g'),pmult(c,'g')))),In(pmult(a,'g')),In(pmult(b,'g'))]--[!KD(pmult(c,'g')),!KU(pmult(c,'g'))]->[K(pmult(c,'g'))]
+rule bpgmul_4_1:
+[In(bpmul(pmult(a,'g'),bpmul(pmult(b,'g'),pmult(c,'g')))),In(pmult(a,'g')),In(pmult(c,'g'))]--[!KD(pmult(b,'g')),!KU(pmult(b,'g'))]->[K(pmult(b,'g'))]
+rule bpgmul_5_1:
+[In(bpmul(pmult(a,'g'),bpmul(pmult(b,'g'),pmult(c,'g')))),In(pmult(c,'g')),In(pmult(b,'g'))]--[!KD(pmult(a,'g')),!KU(pmult(a,'g'))]->[K(pmult(a,'g'))]
+
+rule bpgmul_3_2:
+[In(bpmul(pmult(a,'h'),bpmul(pmult(b,'h'),pmult(c,'h')))),In(pmult(a,'h')),In(pmult(b,'h'))]--[!KD(pmult(c,'h')),!KU(pmult(c,'h'))]->[K(pmult(c,'h'))]
+rule bpgmul_4_2:
+[In(bpmul(pmult(a,'h'),bpmul(pmult(b,'h'),pmult(c,'h')))),In(pmult(a,'h')),In(pmult(c,'h'))]--[!KD(pmult(b,'h')),!KU(pmult(b,'h'))]->[K(pmult(b,'h'))]
+rule bpgmul_5_2:
+[In(bpmul(pmult(a,'h'),bpmul(pmult(b,'h'),pmult(c,'h')))),In(pmult(c,'h')),In(pmult(b,'h'))]--[!KD(pmult(a,'h')),!KU(pmult(a,'h'))]->[K(pmult(a,'h'))]
+*/
+
+rule pm_e_11:
+let
+x1=pmult(~a,'g')
+x2=pmult(b,'g')
+x3=pmult(c,'h')
+in
+[In(bpmul(x1,x2)),In(x3)]--[!KU(bpmul(em(x1,x3),em(x2,x3))),!KD(bpmul(em(x1,x3),em(x2,x3)))]->[Transfer('ok')]
+
+rule pm_e_112:
+let
+x1=pmult(~d,pmult(~a,'g'))
+x2=pmult(b,'g')
+x3=pmult(c,'h')
+in
+[In(bpmul(x1,x2)),In(x3)]--[!KU(bpmul(em(x1,x3),em(x2,x3))),!KD(bpmul(em(x1,x3),em(x2,x3)))]->[Transfer('ok')]
+
+
+rule pm_e_12:
+let
+x1=pmult(a,'g')
+x2=pmult(~b,'g')
+x3=pmult(c,'h')
+in
+[In(bpmul(x1,x2)),In(x3)]--[!KU(bpmul(em(x1,x3),em(x2,x3))),!KD(bpmul(em(x1,x3),em(x2,x3)))]->[Transfer('ok')]
+
+rule pm_e_122:
+let
+x1=pmult(a,'g')
+x2=pmult(~d,pmult(~b,'g'))
+x3=pmult(c,'h')
+in
+[In(bpmul(x1,x2)),In(x3)]--[!KU(bpmul(em(x1,x3),em(x2,x3))),!KD(bpmul(em(x1,x3),em(x2,x3)))]->[Transfer('ok')]
+
+rule pm_e_13:
+let
+x1=pmult(a,'g')
+x2=pmult(b,'g')
+x3=pmult(~c,'h')
+in
+[In(bpmul(x1,x2)),In(x3)]--[!KU(bpmul(em(x1,x3),em(x2,x3))),!KD(bpmul(em(x1,x3),em(x2,x3)))]->[Transfer('ok')]
+rule pm_e_133:
+let
+x1=pmult(a,'g')
+x2=pmult(b,'g')
+x3=pmult(~d,pmult(~c,'h'))
+in
+[In(bpmul(x1,x2)),In(x3)]--[!KU(bpmul(em(x1,x3),em(x2,x3))),!KD(bpmul(em(x1,x3),em(x2,x3)))]->[Transfer('ok')]
+
+rule pm_e_21:
+let 
+x1=pmult(~a,'g')
+x2=pmult(b,'h')
+x3=pmult(c,'h')
+in
+[In(x1),In(bpmul(x2,x3))]--[!KU(bpmul(em(x1,x2),em(x1,x3))),!KD(bpmul(em(x1,x2),em(x1,x3)))]->[Transfer('ok')]
+
+rule pm_e_211:
+let 
+x1=pmult(~d,pmult(~a,'g'))
+x2=pmult(b,'h')
+x3=pmult(c,'h')
+in
+[In(x1),In(bpmul(x2,x3))]--[!KU(bpmul(em(x1,x2),em(x1,x3))),!KD(bpmul(em(x1,x2),em(x1,x3)))]->[Transfer('ok')]
+/*
+rule pm_e_212:
+let 
+x1=pmult(~d,pmult(inv(~a),'g'))
+x2=pmult(b,'h')
+x3=pmult(c,'h')
+in
+[In(x1),In(bpmul(x2,x3))]--[!KU(bpmul(em(x1,x2),em(x1,x3))),!KD(bpmul(em(x1,x2),em(x1,x3)))]->[Transfer('ok')]
+*/
+/*
+rule pm_e_213:
+let 
+x1=pmult(inv(~a),'g')
+x2=pmult(b,'h')
+x3=pmult(c,'h')
+in
+[In(x1),In(bpmul(x2,x3))]--[!KU(bpmul(em(x1,x2),em(x1,x3))),!KD(bpmul(em(x1,x2),em(x1,x3)))]->[Transfer('ok')]
+*/
+/*
+rule pm_e_215:
+let 
+x1=pmult(~t,pmult(~d,pmult(inv(~a),'g')))
+x2=pmult(b,'h')
+x3=pmult(c,'h')
+in
+[In(x1),In(bpmul(x2,x3))]--[!KU(bpmul(em(x1,x2),em(x1,x3))),!KD(bpmul(em(x1,x2),em(x1,x3)))]->[Transfer('ok')]
+*/
+
+rule pm_e_22:
+let 
+x1=pmult(a,'g')
+x2=pmult(~b,'h')
+x3=pmult(c,'h')
+in
+[In(x1),In(bpmul(x2,x3))]--[!KU(bpmul(em(x1,x2),em(x1,x3))),!KD(bpmul(em(x1,x2),em(x1,x3)))]->[Transfer('ok')]
+
+rule pm_e_222:
+let 
+x1=pmult(a,'g')
+x2=pmult(~d,pmult(~b,'h'))
+x3=pmult(c,'h')
+in
+[In(x1),In(bpmul(x2,x3))]--[!KU(bpmul(em(x1,x2),em(x1,x3))),!KD(bpmul(em(x1,x2),em(x1,x3)))]->[Transfer('ok')]
+
+
+rule pm_e_23:
+let 
+x1=pmult(a,'g')
+x2=pmult(b,'h')
+x3=pmult(~c,'h')
+in
+[In(x1),In(bpmul(x2,x3))]--[!KU(bpmul(em(x1,x2),em(x1,x3))),!KD(bpmul(em(x1,x2),em(x1,x3)))]->[Transfer('ok')]
+
+rule pm_e_233:
+let 
+x1=pmult(a,'g')
+x2=pmult(b,'h')
+x3=pmult(~d,pmult(~c,'h'))
+in
+[In(x1),In(bpmul(x2,x3))]--[!KU(bpmul(em(x1,x2),em(x1,x3))),!KD(bpmul(em(x1,x2),em(x1,x3)))]->[Transfer('ok')]
+rule pm_e_311:
+[!PM3(i,bpmul(pmult(a,'g'),bpmul(pmult(b,'g'),pmult(c,'g')))),Fr(~j)]-->[!EM3(~j,bpmul(em(pmult(a,'g'),'h'),bpmul(em(pmult(b,'g'),'h'),em(pmult(c,'g'),'h')))),Out(bpmul(em(pmult(a,'g'),'h'),bpmul(em(pmult(b,'g'),'h'),em(pmult(c,'g'),'h'))))]
+
+/*
+rule pm_e_312:
+[!PM3(i,bpmul(pmult(a,'g'),bpmul(pmult(b,'g'),pmult(c,'g')))),In(pmult(d,'h')),Fr(~j)]-->[!EM3(~j,bpmul(em(pmult(a,'g'),pmult(d,'h')),bpmul(em(pmult(b,'g'),pmult(d,'h')),em(pmult(c,'g'),pmult(d,'h'))))),Out(bpmul(em(pmult(a,'g'),pmult(d,'h')),bpmul(em(pmult(b,'g'),pmult(d,'h')),em(pmult(c,'g'),pmult(d,'h')))))]
+*/
+rule pm_e_321:
+[!PM3(i,bpmul(pmult(a,'h'),bpmul(pmult(b,'h'),pmult(c,'h')))),Fr(~j)]-->[!EM3(~j,bpmul(em('g',pmult(a,'h')),bpmul(em('g',pmult(b,'h')),em('g',pmult(c,'h'))))),Out(bpmul(em('g',pmult(a,'h')),bpmul(em('g',pmult(b,'h')),em('g',pmult(c,'h')))))]
+/*
+rule pm_e_322:
+[!PM3(i,bpmul(pmult(a,'h'),bpmul(pmult(b,'h'),pmult(c,'h')))),Fr(~j),In(pmult(d,'g'))]-->[!EM3(~j,bpmul(em(pmult(d,'g'),pmult(a,'h')),bpmul(em(pmult(d,'g'),pmult(b,'h')),em(pmult(d,'g'),pmult(c,'h'))))),Out(bpmul(em(pmult(d,'g'),pmult(a,'h')),bpmul(em(pmult(d,'g'),pmult(b,'h')),em(pmult(d,'g'),pmult(c,'h')))))]
+*/
+rule bpemul_1:
+[In(bpmul(em('g','h')^x,em('g','h')^y)),In(em('g','h')^x)]--[!KU(em('g','h')^y),!KD(em('g','h')^y)]->[K(em('g','h')^y)]
+rule bpemul_2:
+[In(bpmul(em('g','h')^x,em('g','h')^y)),In(em('g','h')^y)]--[!KU(em('g','h')^x),!KD(em('g','h')^x)]->[K(em('g','h')^x)]
+
+rule bpemul_3:
+[!EM3(i,bpmul(em('g','h')^x,bpmul(em('g','h')^y,em('g','h')^z))),In(em('g','h')^x)]-->[Out(bpmul(em('g','h')^y,em('g','h')^z))]
+rule bpemul_5:
+[!EM3(i,bpmul(em('g','h')^x,bpmul(em('g','h')^y,em('g','h')^z))),In(em('g','h')^y)]-->[Out(bpmul(em('g','h')^x,em('g','h')^z))]
+rule bpemul_6:
+[!EM3(i,bpmul(em('g','h')^x,bpmul(em('g','h')^y,em('g','h')^z))),In(em('g','h')^z)]-->[Out(bpmul(em('g','h')^x,em('g','h')^y))]
+/*
+rule bpemul_3:
+[In(bpmul(em('g','h')^x,bpmul(em('g','h')^y,em('g','h')^z))),In(em('g','h')^x)]--[!KU(bpmul(em('g','h')^y,em('g','h')^z)),!KD(bpmul(em('g','h')^y,em('g','h')^z))]->[K(bpmul(em('g','h')^y,em('g','h')^z))]
+rule bpemul_5:
+[In(bpmul(em('g','h')^x,bpmul(em('g','h')^y,em('g','h')^z))),In(em('g','h')^y)]--[!KU(bpmul(em('g','h')^x,em('g','h')^z)),!KD(bpmul(em('g','h')^x,em('g','h')^z))]->[K(bpmul(em('g','h')^x,em('g','h')^z))]
+rule bpemul_6:
+[In(bpmul(em('g','h')^x,bpmul(em('g','h')^y,em('g','h')^z))),In(em('g','h')^z)]--[!KU(bpmul(em('g','h')^x,em('g','h')^y)),!KD(bpmul(em('g','h')^x,em('g','h')^y))]->[K(bpmul(em('g','h')^x,em('g','h')^y))]
+*/
+/*
+rule bpemul_1:
+[In(bpmul(pmult(a,em('g','h')),pmult(b,em('g','h')))),In(pmult(a,em('g','h')))]--[!KD(pmult(b,em('g','h'))),!KU(pmult(b,em('g','h')))]->[K(pmult(b,em('g','h')))]
+rule bpemul_2:
+[In(bpmul(pmult(a,em('g','h')),pmult(b,em('g','h')))),In(pmult(b,em('g','h')))]--[!KD(pmult(a,em('g','h'))),!KU(pmult(a,em('g','h')))]->[K(pmult(a,em('g','h')))]
+rule bpemul_1_2:
+[In(bpmul(pmult(a,em('g','h')^x),pmult(b,em('g','h')))),In(pmult(a,em('g','h')^x))]--[!KD(pmult(b,em('g','h'))),!KU(pmult(b,em('g','h')))]->[K(pmult(b,em('g','h')))]
+rule bpemul_2_2:
+[In(bpmul(pmult(a,em('g','h')^x),pmult(b,em('g','h')))),In(pmult(b,em('g','h')))]--[!KD(pmult(a,em('g','h')^x)),!KU(pmult(a,em('g','h'))^x)]->[K(pmult(a,em('g','h')^x))]
+rule bpemul_1_3:
+[In(bpmul(pmult(a,em('g','h')),pmult(b,em('g','h')^y))),In(pmult(a,em('g','h')))]--[!KD(pmult(b,em('g','h')^y)),!KU(pmult(b,em('g','h')^y))]->[K(pmult(b,em('g','h')^y))]
+rule bpemul_2_3:
+[In(bpmul(pmult(a,em('g','h')),pmult(b,em('g','h')^y))),In(pmult(b,em('g','h')^y))]--[!KD(pmult(a,em('g','h'))),!KU(pmult(a,em('g','h')))]->[K(pmult(a,em('g','h')))]
+rule bpemul_1_all:
+[In(bpmul(pmult(a,em('g','h')^x),pmult(b,em('g','h')^y))),In(pmult(a,em('g','h')^x))]--[!KD(pmult(b,em('g','h')^y)),!KU(pmult(b,em('g','h')^y))]->[K(pmult(b,em('g','h')^y))]
+rule bpemul_2_all:
+[In(bpmul(pmult(a,em('g','h')^x),pmult(b,em('g','h')^y))),In(pmult(b,em('g','h')^y))]--[!KD(pmult(a,em('g','h')^x)),!KU(pmult(a,em('g','h')^x))]->[K(pmult(a,em('g','h')^x))]
+rule bpemul_3:
+[In(bpmul(pmult(a,em('g','h')),bpmul(pmult(b,em('g','h')),pmult(c,em('g','h'))))),In(pmult(a,em('g','h'))),In(pmult(b,em('g','h')))]--[!KD(pmult(c,em('g','h'))),!KU(pmult(c,em('g','h')))]->[K(pmult(c,em('g','h')))]
+rule bpemul_4:
+[In(bpmul(pmult(a,em('g','h')),bpmul(pmult(b,em('g','h')),pmult(c,em('g','h'))))),In(pmult(a,em('g','h'))),In(pmult(c,em('g','h')))]--[!KD(pmult(b,em('g','h'))),!KU(pmult(b,em('g','h')))]->[K(pmult(b,em('g','h')))]
+rule bpemul_5:
+[In(bpmul(pmult(a,em('g','h')),bpmul(pmult(b,em('g','h')),pmult(c,em('g','h'))))),In(pmult(c,em('g','h'))),In(pmult(b,em('g','h')))]--[!KD(pmult(a,em('g','h'))),!KU(pmult(a,em('g','h')))]->[K(pmult(a,em('g','h')))]
+*/
+
+rule AA_1:
+[Fr(~a1),Fr(~b1),Fr(~a2),Fr(~b2)]
+-->
+[!Sk('SK1_1',~b1),!Sk('SK1_2',pmult(~a1,'g')),!Sk('SK2_1',~b2),!Sk('SK2_2',pmult(~a2,'g')),
+!Pk('PK1_1',pmult(~b1,'h')),!Pk('PK1_2',em('g','h')^~a1),!Pk('PK2_1',pmult(~b2,'h')),!Pk('PK2_2',em('g','h')^~a2)]
+rule Server:
+[Fr(~r),Fr(~r1),Fr(~r2),!Pk('PK1_1',pmult(~b1,'h')),!Pk('PK1_2',em('g','h')^~a1)]
+-->
+[!Random('r',~r),!Random('r1',~r1),!Random('r2',~r2),!Temp('temp1',em('g','h')^~r1),
+!Temp('temp2',pmult(~r2,'h')),Out(<'term1',bpmul(pmult(~r2,'h'),pmult(~r,pmult(~b1,'h')))>),
+Out(<'term2',bpmul(em('g','h')^~r1,(em('g','h')^~a1)^~r)>),Out(<'term3',pmult(~r,'h')>)]
+
+rule AA_2:
+[!Temp('temp1',temp1),!Temp('temp2',temp2),!Sk('SK2_2',pmult(~a2,'g')),!Sk('SK2_1',~b2),In(<'term3',pmult(~r,'h')>)]
+-->
+[Out(<'update1',bpmul(temp1,em(pmult(~r,'h'),pmult(~a2,'g')))>),
+Out(<'update1',bpmul(temp1,em(pmult(~r,'h'),pmult(~a2,'g')))>),Out(<'update2',bpmul(temp2,pmult(~b2,pmult(~r,'h')))>)]
+
+rule Adversary:
+[!Sk('SK1_2',pmult(~a1,'g')),!Sk('SK1_1',~b1),!Sk('SK2_2',pmult(~a2,'g')),!Sk('SK2_1',~b2),
+!Pk('PK1_1',pmult(~b1,'h')),!Pk('PK1_2',em('g','h')^~a1),!Pk('PK1_2',PK1_2),!Pk('PK2_1',pmult(~b2,'h')),!Pk('PK2_2',em('g','h')^~a2),
+!Random('r',~r),!Random('r1',~r1),!Random('r2',~r2)]
+--[Secret(pmult(~a1,'g')),Secret(~b1),Secret(pmult(~a2,'g')),Secret(~b2)]->
+[Out(<'PK1_1',pmult(~b1,'h')>),Out(<'PK1_2',PK1_2>),Out(<'PK2_1',pmult(~b2,'h')>),Out(<'PK2_2',em('g','h')^~a2>),
+Out(<'r1',~r1>),Out(<'r2',~r2>),Out(<'r',~r>)]
+
+//!EM3('1',bpmul(em('g','h')^~t1,bpmul(em('g','h')^~t2,em('g','h')^~t3))),Out(bpmul(em('g','h')^~t1,bpmul(em('g','h')^~t2,em('g','h')^~t3))),Out(em('g','h')^~t2)
+/*
+rule Test:
+[Fr(~t1),Fr(~t2),Fr(~t3),Fr(~b9)]--[Secret(bpmul((((em('g','h')^~t1)^~t2)^~b9)^~b9,(((em('g','h')^~t1)^~t3)^~b9)^~b9))]->[Out(pmult(~b9,pmult(~t1,'g'))),Out(bpmul(pmult(~b9,pmult(~t2,'h')),pmult(~b9,pmult(~t3,'h'))))]
+*/
+/*
+Secret(bpmul(em('g','h')^~t1,em('g','h')^~t3)),Secret(pmult(~a1,'g')),Secret(~b1),Secret(pmult(~a2,'g')),Secret(~b2),Secret((em('g','h')^~a2)^~r),
+Secret(em(pmult(~a1,'g'),'h')^~r)
+*/
+/*
+rule Adver_2:
+[Fr(~t1),Fr(~t2),Fr(~t3),!Sk('SK1_2',pmult(~a1,'g')),!Sk('SK1_1',~b1),!Sk('SK2_2',pmult(32~a2,'g')),!Sk('SK2_1',~b2),!Pk('PK1_1',pmult(~b1,'h')),!Pk('PK1_2',em('g','h')^~a1),!Pk('PK1_2',PK1_2),!Pk('PK2_1',pmult(~b2,'h')),!Pk('PK2_2',em('g','h')^~a2),!Random('r',~r),!Random('r1',~r1),!Random('r2',~r2)]
+--[Secret(bpmul(em('g','h')^~r2,(em('g','h')^~b1)^~r))]->
+[!EM3('1',bpmul(em('g','h')^~t1,bpmul(em('g','h')^~t2,em('g','h')^~t3))),Out(bpmul(em('g','h')^~t1,bpmul(em('g','h')^~t2,em('g','h')^~t3))),
+Out(em('g','h')^~t2),Out(<'PK1_1',pmult(~b1,'h')>),Out(<'PK1_2',PK1_2>),
+Out(<'PK2_1',pmult(~b2,'h')>),Out(<'PK2_2',em('g','h')^~a2>),Out(<'r1',~r1>),Out(<'r2',~r2>)]
+*/
+
+lemma Confidentiality:
+  " /* The intruder cannot know ~b: */
+    All B #i. (
+      /* ~b is claimed secret implies */
+      Secret(B) @ #i ==>
+      /* the adversary does not know '~b' */
+      not( Ex #j. K(B) @ #j )
+    )
+    "
+end
