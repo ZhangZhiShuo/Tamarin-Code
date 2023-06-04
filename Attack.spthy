@@ -1,0 +1,36 @@
+theory Attack
+begin
+
+builtins: hashing, diffie-hellman, xor
+
+rule InitParameters:
+[Fr(~s),Fr(~cg)]--[OnlyOnceV('InitParameters')]->[!Param(<'par1',~s>),!Param(<'par2',~cg>)]
+rule CGSetup:
+[!Param(<'par1',~s>),!Param(<'par2',~cg>)]--[]->[!Msk('msk1',~s),!Msk('msk2',~cg),!CGPK('cgpk','g'^~s), Out(<'cgpk','g'^~s>)]
+
+rule AttackerKeyGen:
+[!Msk('msk1',~s),!Msk('msk2',~cg)]--[]->[Out(<'g'^(h('hid_a')*~s),h('g'^(h('hid_a')*~s))⊕h(<'hpw_a','hid_a'>),h(~cg)⊕h('g'^(h('hid_a')*~s))>)]
+
+rule OutputID:
+[]--[]->[Out(<'hid_x','hpw_x'>)]
+
+rule MasterKeyDisclose:
+[!Msk('msk2',~msk2)]--[Solve(h(~msk2))]->[]
+
+/*
+rule KeyForgery:
+let sk1=ecpk^h('hid_x')
+    sk2=h(sk1)⊕h(<'hpw_x','hid_x'>)
+    sk3=h(~msk2) ⊕ h(sk1) 
+in
+[In(<'hid_x','hpw_x'>),!CGPK('cgpk',ecpk),!Msk('msk2',~msk2)]--[Solve(<sk1,sk2,sk3>)]->[]
+*/
+restriction OnlyOnceV:
+  "All #i #j x. OnlyOnceV(x)@#i & OnlyOnceV(x)@#j ==> #i = #j"
+
+lemma Secret:
+
+"
+All x  #i. Solve(x) @i==> not (Ex #j. K(x)@j)
+"
+end
